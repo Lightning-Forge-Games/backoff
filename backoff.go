@@ -45,6 +45,24 @@ type Backoff struct {
 	Max time.Duration
 }
 
+func ForAttempt(attempt uint64) time.Duration {
+	return (&Backoff{
+		Factor: DEFAULT_FACTOR,
+		Jitter: DEFAULT_JITTER,
+		Min:    DEFAULT_MIN,
+		Max:    DEFAULT_MAX,
+	}).ForAttempt(attempt)
+}
+
+func ForAttemptWithJitter(attempt uint64) time.Duration {
+	return (&Backoff{
+		Factor: DEFAULT_FACTOR,
+		Jitter: true,
+		Min:    DEFAULT_MIN,
+		Max:    DEFAULT_MAX,
+	}).ForAttempt(attempt)
+}
+
 // Duration returns the duration for the current attempt before incrementing
 // the attempt counter. See ForAttempt.
 func (b *Backoff) Duration() time.Duration {

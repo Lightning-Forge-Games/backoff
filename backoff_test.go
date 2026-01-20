@@ -111,6 +111,12 @@ func TestJitter(t *testing.T) {
 	equals(t, b.Duration(), 100*time.Millisecond)
 }
 
+func TestJitterStatic(t *testing.T) {
+	equals(t, ForAttemptWithJitter(0), 100*time.Millisecond)
+	between(t, ForAttemptWithJitter(1), 100*time.Millisecond, 200*time.Millisecond)
+	between(t, ForAttemptWithJitter(2), 100*time.Millisecond, 400*time.Millisecond)
+}
+
 func TestCopy(t *testing.T) {
 	b := &Backoff{
 		Min:    100 * time.Millisecond,
@@ -139,6 +145,13 @@ func TestConcurrent(t *testing.T) {
 	go test()
 	go test()
 	wg.Wait()
+}
+
+func TestStatic(t *testing.T) {
+	equals(t, ForAttempt(0), 100*time.Millisecond)
+	equals(t, ForAttempt(1), 200*time.Millisecond)
+	equals(t, ForAttempt(2), 400*time.Millisecond)
+	equals(t, ForAttempt(3), 800*time.Millisecond)
 }
 
 func between(t *testing.T, actual, low, high time.Duration) {
